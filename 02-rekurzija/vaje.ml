@@ -17,7 +17,22 @@
  rekurzivna.
 [*----------------------------------------------------------------------------*)
 
-let reverse _ = ()
+(* type 'a list = [] | 'a :: 'a list *)
+(*type intList = Prazen | Sestavljen (int * intList) *)
+
+(* Normalna rekurzija *)
+let rec reverse1 l = match l with 
+  | [] -> []
+  | x::xs -> (reverse1 xs) @ [x]
+
+let rec reverse2 l = 
+  let rec reverse_aux l acc = match l with
+    | [] -> acc
+    | x::xs -> reverse_aux xs (x :: acc)
+  in
+  reverse_aux l []
+
+
 
 (*----------------------------------------------------------------------------*
  ## Funkcija `repeat`
@@ -28,7 +43,9 @@ let reverse _ = ()
   vrednosti `n` funkcija vrne prazen seznam.
 [*----------------------------------------------------------------------------*)
 
-let rec repeat _ _ = ()
+let rec repeat x n = 
+  if n <= 0 then []
+  else x :: repeat x (n-1)
 
 let primer_repeat_1 = repeat "A" 5
 (* val primer_repeat_1 : string list = ["A"; "A"; "A"; "A"; "A"] *)
@@ -47,7 +64,13 @@ let primer_repeat_2 = repeat "A" (-2)
  funkcije `List.init`.
 [*----------------------------------------------------------------------------*)
 
-let range _ = ()
+let rec range n = 
+  let rec range_aux n l = match n with
+  | 0 -> [0] :: l
+  | n when n>0 -> range_aux (n-1) ([n] :: l) 
+  | _ -> []
+in range_aux n []
+
 
 let primer_range = range 10
 (* val primer_range : int list = [0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10] *)
@@ -62,7 +85,11 @@ let primer_range = range 10
  ...`. Pri tem ne smete uporabiti vgrajene funkcije `List.map`.
 [*----------------------------------------------------------------------------*)
 
-let rec map _ _ = ()
+let rec map l f = 
+ | []->[]
+ | x :: xs -> f x :: map_aux xs f
+
+
 
 let primer_map_1 =
   let plus_two = (+) 2 in
@@ -101,7 +128,12 @@ let primer_map_2 =
  Pri tem ne smete uporabiti vgrajene funkcije `List.mapi`.
 [*----------------------------------------------------------------------------*)
 
-let mapi _ _ = ()
+let mapi f l = 
+  let rec mapi_aux i l = match l with
+    | [] -> []
+    | x :: xs -> (f i x) :: mapi_auix (i+1) xs
+in 
+mapi_aux 0 l
 
 let primer_mapi = mapi (+) [0; 0; 0; 2; 2; 2]
 (* val primer_mapi : int list = [0; 1; 2; 5; 6; 7] *)
